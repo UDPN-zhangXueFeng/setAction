@@ -26,13 +26,13 @@ jobs:
         uses: TheDoctor0/zip-release@0.7.1
         with:
           # Filename for archive
-          filename: release.zip
+          filename: 'release.zip'
           # Working directory before zipping
-          directory: dist
+          directory: './dist'
 
-        
-      
-      
+
+
+
       # 同步server目录下的后端代码到服务器（目标路径：/home/nginx/myBlogServer）
       - name: Deploy
         uses: cross-the-world/scp-pipeline@master
