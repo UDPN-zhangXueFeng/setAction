@@ -1,7 +1,7 @@
 name: Auto Deploy # 当前工作流程的名称
-on: 
-  push: 
-    branches: 
+on:
+  push:
+    branches:
       - main # 只要push到main分支，就会触发该工作流程
 jobs:
   build-and-deploy:
@@ -15,13 +15,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16 # 指定node版本
-          
+
       # 打包代码生成环境
       - name: Build
         run: |
-          cd client # 进入前端侧的工程目录
           npm install # 安装依赖
-          npm run build # 打包前端代码到生产环境（目标路径为：server/public）
+          npm run build # 打包前端代码到生产环境
       # 同步server目录下的后端代码到服务器（目标路径：/home/nginx/myBlogServer）
       - name: Deploy
         uses: cross-the-world/scp-pipeline@master
@@ -32,7 +31,7 @@ jobs:
           connect_timeout: 10s
           local: './dist/*' # 源路径（工作流）
           remote: /rnail # 目标路径（服务器）
-      
+
       # 在服务器端执行相关指令
       #- name: Executing remote ssh commands
       #  uses: appleboy/ssh-action@master
