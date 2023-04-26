@@ -1,0 +1,23 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main # 只有在main分支push代码时才会触发
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # 运行环境
+    steps:
+      - name: Checkout # 检出代码
+        uses: actions/checkout@v2
+      - name: Install dependencies # 安装依赖
+        run: npm install
+      - name: Build # 打包
+        run: npm run build
+      - name: Deploy # 部署
+        uses: easingthemes/ssh-deploy@v2
+        with:
+          server: ${{ secrets.SERVER }} # 服务器地址
+          username: ${{ secrets.USERNAME }} # 用户名
+          password: ${{ secrets.PASSWORD }} # 密码
+          local_path: ./dist # 本地打包路径
+          server_path: /rnail # 服务器部署路径
