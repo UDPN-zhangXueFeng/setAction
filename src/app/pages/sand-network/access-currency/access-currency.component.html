@@ -1,0 +1,123 @@
+<app-page-header [pageHeaderInfo]="pageHeaderInfo"></app-page-header>
+<ng-template #headerExtra>
+  <div>
+    <div><img src="../../../../assets/images/Demo only.png" alt="" /></div>
+  </div>
+</ng-template>
+<ng-template #headerContent>
+  <span class="ctx-desc">
+    Using UDPN, IT system users can access the following digital currencies
+    through a Business Node gateway. Alliance Members can vote to add more in
+    the future.
+  </span>
+</ng-template>
+<div class="normal-table-wrap">
+  <!-- <app-card-table-wrap [tableTitle]="''" [isNormalTable]="false"> -->
+  <app-ant-table
+    (selectedChange)="selectedChecked($event)"
+    [tableConfig]="tableConfig"
+    [tableData]="dataList"
+  ></app-ant-table>
+  <ng-template #currencyTypeTpl let-currencyType="currencyType" let-link="link">
+    {{ currencyType }}
+    <span
+      nz-tooltip
+      [nzTooltipTitle]="titleTemplate"
+      [nzTooltipPlacement]="'right'"
+      [nzTooltipColor]="'#3c5686'"
+      ><i nz-icon nzType="question-circle" [nzTheme]="'twotone'"></i>
+      <ng-template #titleTemplate let-thing>
+        <span class="currency-tooltip">
+          Go to
+          <a
+            class="currency-line"
+            [href]="link"
+            target="_blank"
+            rel="noopener noreferrer"
+            >{{ link }}</a
+          ></span
+        >
+      </ng-template></span
+    >
+  </ng-template>
+  <!-- <ng-template #statusTpl let-status="status" class="border-r-0">
+    {{ status }}
+  </ng-template> -->
+  <ng-template #operationTpl let-status="status" let-key="key">
+    <span class="operate-text" *ngIf="status === 'Enabled'" (click)="onPermit()"
+      >Permission management</span
+    >
+    <span
+      class="operate-text"
+      *ngIf="status === 'Available'"
+      (click)="onEnable()"
+      >Enable</span
+    >
+  </ng-template>
+  <ng-container>
+    <nz-modal
+      [(nzVisible)]="isVisibles"
+      nzTitle="Tips"
+      [nzFooter]="null"
+      (nzOnCancel)="handleCancels()"
+      (nzOnOk)="handleOks()"
+    >
+      <ng-container *nzModalContent>
+        <p>
+          In the actual UDPN system, click here to access the digital currency
+          through the business node gateway. It is not supported in the sandbox
+          system.
+        </p>
+        <div class="m-t-30 text-center">
+          <button nz-button nzType="primary" (click)="handleOks()">
+            Confirm
+          </button>
+        </div>
+      </ng-container>
+    </nz-modal>
+  </ng-container>
+  <ng-container>
+    <nz-modal
+      [(nzVisible)]="isVisible"
+      nzTitle="Permission management"
+      [nzOkLoading]="isOkLoading"
+      (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()"
+      [nzWidth]="700"
+      nzCentered="true"
+    >
+      <div *nzModalContent>
+        <p>
+          In the actual UDPN system, you can configure the IT system user
+          permissions to operate with this currency here. It is not supported in
+          the sandbox system.
+        </p>
+        <form nz-form class="m-t-30">
+          <nz-form-item *ngFor="let item of permissionList">
+            <nz-form-label [nzSm]="12" [nzXs]="24">{{
+              item.title
+            }}</nz-form-label>
+            <nz-form-control
+              [nzSm]="6"
+              [nzXs]="24"
+              nzErrorTip="The {{ item.title }} is required"
+            >
+              <nz-radio-group name="item.title" [(ngModel)]="radioValue">
+                <label nz-radio nzValue="Yes">Yes</label>
+                <label nz-radio nzValue="No">No</label>
+              </nz-radio-group>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </div>
+      <div *nzModalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">
+          Cancel
+        </button>
+        <button nz-button nzType="primary" (click)="handleOk()">Confirm</button>
+      </div>
+    </nz-modal>
+  </ng-container>
+
+  <!-- </app-card-table-wrap> -->
+</div>

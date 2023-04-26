@@ -1,0 +1,560 @@
+<app-page-header
+  [backTpl]="backTpl"
+  [backUrl]="'/sand-box/sand-transaction/transactions'"
+  [pageHeaderInfo]="pageHeaderInfo"
+></app-page-header>
+<ng-template #backTpl>
+  <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+</ng-template>
+<ng-template #headerExtra>
+  <div>
+    <div>
+      <img class="m-l-5" src="../../../../assets/images/WEB.png" alt="" />
+
+      <img class="m-l-5" src="../../../../assets/images/API (1).png" alt="" />
+    </div>
+  </div>
+</ng-template>
+<div class="normal-table-wrap">
+  <div>
+    <!-- <div class="ctx-titles">
+      <nz-breadcrumb>
+        <nz-breadcrumb-item>Transaction Management</nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          <a routerLink="/sandBox/transaction/query">Transactions Search</a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item class="font-semibold">Info</nz-breadcrumb-item>
+      </nz-breadcrumb>
+    </div> -->
+    <div nz-row class="inner-content">
+      <div nz-col nzSpan="24" nzOffset="">
+        <nz-card nzTitle="Basic Information" [nzExtra]="" [nzBordered]="false">
+        </nz-card>
+        <!-- <ng-template #extraTemplate>
+          <div>
+            <nz-space>
+              <img
+                *nzSpaceItem
+                src="../../../../assets/images/WEB.png"
+                class="w-14"
+                alt=""
+              />
+              <img
+                *nzSpaceItem
+                src="../../../../assets/images/API (1).png"
+                class="w-14"
+                alt=""
+              />
+            </nz-space>
+          </div>
+        </ng-template> -->
+        <nz-descriptions
+          [nzColumn]="2"
+          [nzColon]="false"
+          class="descriptions-info"
+        >
+          <nz-descriptions-item nzTitle="DID" [nzSpan]="3">{{
+            info.did
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Transaction Type"
+            >{{ info.transType }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Amount"
+            >{{ info.transAmount }}
+            {{ info.fromCurrencyType.split('-')[0] }}</nz-descriptions-item
+          >
+          <nz-descriptions-item nzTitle="Source Currency"
+            >{{ info.fromCurrencyType }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Target Currency"
+            >{{ info.toCurrencyType }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Source Account Address">
+            {{ info.sourceAccountAddress }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Target Account Address">
+            {{ info.targetAccountAddress }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="TN Name">
+            {{ info.originalTnName }}
+          </nz-descriptions-item>
+          <nz-descriptions-item
+            nzTitle="Target TN Name"
+            *ngIf="info.transType === 'Swap'"
+          >
+            {{ info.targetTnName }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="TN Code">
+            {{ info.originalTnCode }}
+          </nz-descriptions-item>
+          <nz-descriptions-item
+            nzTitle="Target TN Code"
+            *ngIf="info.transType === 'Swap'"
+          >
+            {{ info.targetTnCode }}
+          </nz-descriptions-item>
+          <nz-descriptions-item
+            nzTitle="Estimated Channel Fee"
+            *ngIf="info.channelFee === 1"
+          >
+            {{ info.estimatedChannelFee + info.channelCurrency }}
+          </nz-descriptions-item>
+          <nz-descriptions-item
+            nzTitle="Max Channel Fee"
+            *ngIf="info.allowMaxChannelFee === 1"
+            >{{
+              info.maxChannelFee === null
+                ? '--'
+                : info.maxChannelFee + info.channelCurrency
+            }}</nz-descriptions-item
+          >
+          <nz-descriptions-item nzTitle="Service Fee"
+            >{{ info.transFee }}
+            {{ info.fromCurrencyType.split('-')[0] }}</nz-descriptions-item
+          >
+          <nz-descriptions-item nzTitle="Rate">{{
+            info.fxRate === '--' || info.fxRate === null
+              ? '--'
+              : (info.fxRate)
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Total Amount">
+            {{ info.totalAmount }}
+            {{ info.fromCurrencyType.split('-')[0] }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Received Amount" [nzSpan]="3">
+            {{ info.toAmount }}
+            {{ info.toCurrencyType.split('-')[0] }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Submission Time">
+            {{ info.submitTime }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Status" [nzSpan]="3">
+            {{ info.transStatus | map:'vnStatus' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Transaction Key" [nzSpan]="">
+            {{ info.transKey }}
+          </nz-descriptions-item>
+        </nz-descriptions>
+        <nz-card nzTitle="Circulation Information" [nzBordered]="false">
+        </nz-card>
+        <ng-container *ngIf="timeLineList.length > 0">
+          <div
+            nz-row
+            [ngClass]="{ dTimeLine: timeLineList[3].is || timeLineList[6].is }"
+          >
+            <div nz-col nzSpan="20" nzOffset="2">
+              <div class="time-line">
+                {{
+                  'State machine of a normal' +
+                    ' ' +
+                    (info.transType === 'Transfer' ? 'transfer' : 'swap') +
+                    ' ' +
+                    'transaction'
+                }}
+              </div>
+              <div>
+                <nz-timeline nzMode="left">
+                  <nz-timeline-item [nzDot]="dotTemplates">
+                    <div style="height: 100px">
+                      <div class="font-bold text-xl">Start</div>
+                    </div>
+                  </nz-timeline-item>
+                  <nz-timeline-item [nzDot]="dotTemplate" [nzLabel]="left8">
+                    <div class="time-list">
+                      <div>
+                        <span
+                          nz-tooltip
+                          [nzTooltipTitle]="
+                            timeLineList[timeLineList.length - 2].key
+                          "
+                          [nzTooltipPlacement]="'right'"
+                          >txn id:{{
+                            timeLineList[timeLineList.length - 2].key.slice(
+                              0,
+                              30
+                            ) + '...'
+                          }}</span
+                        >
+                      </div>
+                      <div>
+                        txn state:{{
+                          timeLineList[timeLineList.length - 2].status
+                        }}
+                      </div>
+                      <div>
+                        received time:{{
+                          timeLineList[timeLineList.length - 2].date
+                        }}
+                      </div>
+                    </div>
+                    <ng-template #left8>
+                      <div
+                        class="time-card"
+                        [ngClass]="{
+                          'time-card-gray':
+                            timeLineList[timeLineList.length - 2].color === 3
+                        }"
+                      >
+                        <div>
+                          {{ timeLineList[timeLineList.length - 2].status }}
+                        </div>
+                        <div>（#1）</div>
+                      </div>
+                    </ng-template>
+                  </nz-timeline-item>
+                  <nz-timeline-item [nzDot]="dotTemplate" [nzLabel]="left9">
+                    <div style="height: 180px">
+                      <div
+                        class="time-card"
+                        [ngClass]="{
+                          'time-card-gray':
+                            timeLineList[timeLineList.length - 1].color === 3
+                        }"
+                      >
+                        <div>
+                          {{ timeLineList[timeLineList.length - 1].status }}
+                        </div>
+                        <div>（#2）</div>
+                      </div>
+                    </div>
+                    <ng-template #left9>
+                      <div class="time-list">
+                        <div>
+                          <span
+                            nz-tooltip
+                            [nzTooltipTitle]="
+                              timeLineList[timeLineList.length - 1].key
+                            "
+                            [nzTooltipPlacement]="'right'"
+                            >txn id:{{
+                              timeLineList[timeLineList.length - 1].key.slice(
+                                0,
+                                30
+                              ) + '...'
+                            }}</span
+                          >
+                        </div>
+                        <div>
+                          txn state:{{
+                            timeLineList[timeLineList.length - 1].status
+                          }}
+                        </div>
+                        <div>
+                          received time:{{
+                            timeLineList[timeLineList.length - 1].date
+                          }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </nz-timeline-item>
+                  <nz-timeline-item [nzDot]="dotTemplate" [nzLabel]="left2">
+                    <div class="time-list">
+                      <div>
+                        <span
+                          nz-tooltip
+                          [nzTooltipTitle]="timeLineList[0].key"
+                          [nzTooltipPlacement]="'right'"
+                          >txn id:{{
+                            timeLineList[0].key.slice(0, 30) + '...'
+                          }}</span
+                        >
+                      </div>
+                      <div>txn state:{{ timeLineList[0].status }}</div>
+                      <div>received time:{{ timeLineList[0].date }}</div>
+                    </div>
+                    <ng-template #left2>
+                      <div
+                        class="time-card"
+                        [ngClass]="{
+                          'time-card-gray': timeLineList[0].color === 3
+                        }"
+                      >
+                        <div>{{ timeLineList[0].status }}</div>
+                        <div>（#3）</div>
+                      </div>
+                    </ng-template>
+                  </nz-timeline-item>
+                  <nz-timeline-item [nzDot]="dotTemplate" [nzLabel]="left1">
+                    <div
+                      [ngClass]="{
+                        flex: timeLineList[3].is,
+                        'justify-around': timeLineList[3].is,
+                        'w-full': timeLineList[3].is
+                      }"
+                      style="height: 180px"
+                    >
+                      <div
+                        class="time-card"
+                        [ngClass]="{
+                          'time-card-gray': timeLineList[1].color === 3
+                        }"
+                      >
+                        <div>Tn1 processing</div>
+                        <div>（#4）</div>
+                      </div>
+                      <ng-container *ngIf="timeLineList[3].is">
+                        <div class="line-b"></div>
+                        <div class="time-card-error">
+                          <div>Exception handling</div>
+                          <div>（#{{ timeLineList[3].is ? '5' : '' }}）</div>
+                        </div>
+                        <div class="line-b"></div>
+                        <div class="flex mt-5 w-24">
+                          <div class="ghj w-8 h-8 rounded-full"></div>
+                          <div class="font-bold text-xl m-l-5">End</div>
+                        </div>
+                      </ng-container>
+                    </div>
+                    <ng-template #left1>
+                      <div class="time-list">
+                        <div>
+                          <span
+                            nz-tooltip
+                            [nzTooltipTitle]="timeLineList[1].key"
+                            [nzTooltipPlacement]="'right'"
+                            >txn id:{{
+                              timeLineList[1].key.slice(0, 30) + '...'
+                            }}</span
+                          >
+                        </div>
+                        <div>txn state:{{ timeLineList[1].status }}</div>
+                        <div>received time:{{ timeLineList[1].date }}</div>
+                      </div>
+                    </ng-template>
+                  </nz-timeline-item>
+                  <nz-timeline-item
+                    [nzDot]="dotTemplate"
+                    [nzLabel]="left3"
+                    class="tn1Procssd"
+                  >
+                    <div class="time-list">
+                      <div>
+                        <span
+                          nz-tooltip
+                          [nzTooltipTitle]="timeLineList[2].key"
+                          [nzTooltipPlacement]="'right'"
+                          >txn id:{{
+                            timeLineList[2].key.slice(0, 30) + '...'
+                          }}</span
+                        >
+                      </div>
+                      <div>txn state:{{ timeLineList[2].status }}</div>
+                      <div>received time:{{ timeLineList[2].date }}</div>
+                      <div *ngIf="timeLineList[2].fee !== '--'">
+                        Transaction fee:{{
+                          timeLineList[2].fee === null ||
+                          timeLineList[2].fee === ''
+                            ? '--'
+                            : timeLineList[2].fee
+                        }}
+                        {{
+                          timeLineList[2].fee === '--'
+                            ? ''
+                            : info.fromCurrencyType.split('-')[0]
+                        }}
+                      </div>
+                      <div>
+                        <span
+                          *ngIf="
+                            timeLineList[2].hash &&
+                            timeLineList[2].hash !== '--'
+                          "
+                          nz-tooltip
+                          [nzTooltipTitle]="timeLineList[2].hash"
+                          [nzTooltipPlacement]="'right'"
+                          >txn hash on ETH:{{
+                            timeLineList[2].hash.slice(0, 30) + '...'
+                          }}</span
+                        >
+                      </div>
+                    </div>
+                    <ng-template #left3>
+                      <div
+                        class="time-card"
+                        [ngClass]="{
+                          'time-card-gray': timeLineList[2].color === 3
+                        }"
+                      >
+                        <div>Tn1 procssd successfully</div>
+                        <div>（#{{ timeLineList[3].is ? '5' : '5' }}）</div>
+                      </div>
+                    </ng-template>
+                  </nz-timeline-item>
+                  <ng-container *ngIf="info.transType !== 'Transfer'">
+                    <nz-timeline-item [nzDot]="dotTemplate" [nzLabel]="left4">
+                      <div
+                        [ngClass]="{
+                          flex: timeLineList[6].is,
+                          'justify-around': timeLineList[6].is,
+                          'w-full': timeLineList[6].is
+                        }"
+                        style="height: 180px"
+                      >
+                        <div
+                          class="time-card"
+                          [ngClass]="{
+                            'time-card-gray': timeLineList[4].color === 3
+                          }"
+                        >
+                          <div>TN2 processing</div>
+                          <div>
+                            （#{{
+                              timeLineList[6].is
+                                ? '6'
+                                : timeLineList[3].is
+                                ? '6'
+                                : '6'
+                            }}）
+                          </div>
+                        </div>
+                        <ng-container *ngIf="timeLineList[6].is">
+                          <div class="line-b"></div>
+                          <div class="time-card-error">
+                            <div>{{ timeLineList[6].status }}</div>
+                            <div>
+                              （#{{
+                                timeLineList[6].is
+                                  ? '7'
+                                  : timeLineList[3].is
+                                  ? ''
+                                  : ''
+                              }}）
+                            </div>
+                          </div>
+                          <div
+                            class="line-b"
+                            [ngClass]="{
+                              grayscale: !(
+                                timeLineList[9].is || timeLineList[10].is
+                              )
+                            }"
+                          ></div>
+                          <div class="flex m-t-20 w-24">
+                            <div
+                              class="ghj w-32 h-32 rounded-full"
+                              [ngClass]="{
+                                grayscale: !(
+                                  timeLineList[9].is || timeLineList[10].is
+                                )
+                              }"
+                            ></div>
+                            <div class="font-bold text-xl m-l-5">End</div>
+                          </div>
+                        </ng-container>
+                      </div>
+                      <ng-template #left4>
+                        <div class="time-list">
+                          <div>
+                            <span
+                              nz-tooltip
+                              [nzTooltipTitle]="timeLineList[4].key"
+                              [nzTooltipPlacement]="'right'"
+                              >txn id:{{
+                                timeLineList[4].key.slice(0, 30) + '...'
+                              }}</span
+                            >
+                          </div>
+                          <div>txn state:{{ timeLineList[4].status }}</div>
+                          <div>received time:{{ timeLineList[4].date }}</div>
+                        </div>
+                      </ng-template>
+                    </nz-timeline-item>
+                    <nz-timeline-item [nzDot]="dotTemplate" [nzLabel]="left5">
+                      <div class="time-list">
+                        <div>
+                          <span
+                            nz-tooltip
+                            [nzTooltipTitle]="timeLineList[5].key"
+                            [nzTooltipPlacement]="'right'"
+                            >txn id:{{
+                              timeLineList[5].key.slice(0, 30) + '...'
+                            }}</span
+                          >
+                        </div>
+                        <div>txn state:{{ timeLineList[5].status }}</div>
+                        <div>received time:{{ timeLineList[5].date }}</div>
+                        <div *ngIf="timeLineList[5].fee !== '--'">
+                          Transaction fee:{{
+                            timeLineList[5].fee === null ||
+                            timeLineList[5].fee === ''
+                              ? '--'
+                              : timeLineList[5].fee
+                          }}
+                          {{
+                            timeLineList[5].fee === '--'
+                              ? ''
+                              : info.fromCurrencyType.split('-')[0]
+                          }}
+                        </div>
+                        <div>
+                          <span
+                            *ngIf="
+                              timeLineList[5].hash &&
+                              timeLineList[5].hash !== '--'
+                            "
+                            nz-tooltip
+                            [nzTooltipTitle]="timeLineList[5].hash"
+                            [nzTooltipPlacement]="'right'"
+                            >txn hash on ETH:{{
+                              timeLineList[5].hash.slice(0, 30) + '...'
+                            }}</span
+                          >
+                        </div>
+                      </div>
+                      <ng-template #left5>
+                        <div
+                          class="time-card"
+                          [ngClass]="{
+                            'time-card-gray': timeLineList[5].color === 3
+                          }"
+                        >
+                          <div>Tn2 procssd successfully</div>
+                          <div>
+                            （#{{
+                              timeLineList[6].is
+                                ? '7'
+                                : timeLineList[3].is
+                                ? '7'
+                                : '7'
+                            }}）
+                          </div>
+                        </div>
+                      </ng-template>
+                    </nz-timeline-item>
+                  </ng-container>
+
+                  <nz-timeline-item [nzDot]="dotTemplates">
+                    <div style="height: 100px">
+                      <div class="font-bold text-xl">End</div>
+                    </div>
+                  </nz-timeline-item>
+                </nz-timeline>
+
+                <ng-template #dotTemplate>
+                  <img
+                    src="../../../../assets/images/vn/poiner.png"
+                    class="points"
+                    alt=""
+                  />
+                </ng-template>
+                <ng-template #dotTemplates>
+                  <div class="ghj w-32 h-32 rounded-full lastPoints"></div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <nz-card nzTitle="Txn Settlement" [nzBordered]="false"> </nz-card>
+        <div class="m-b-40 w-full text-right p-r-24">
+          <button
+            nz-button
+            nzType="primary"
+            routerLink="/sand-box/sand-transaction/transactions"
+          >
+            Back
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

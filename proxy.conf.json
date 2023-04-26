@@ -1,0 +1,40 @@
+{
+
+
+  "/v1/udpn/control/vote": { 
+    "target": "http://69.230.239.221:8081/",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/v1/udpn/processing": { 
+    "target": "http://69.230.239.221:8082/",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/v1/udpn/bninit": { 
+    "target": "http://69.230.239.221:8082/",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/site": {
+    "target": "http://1.117.181.242:8003/",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/site": ""
+    }
+  },
+  "/localhost": {
+    "target": "http://localhost:4201/",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/site": ""
+    }
+  },
+  "/v1": { 
+    "target": "http://69.230.239.221:8081/",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

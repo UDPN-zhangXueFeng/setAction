@@ -1,0 +1,61 @@
+<div>
+  <h2 class="m-b-8" [class.is-over-model]="isOverModel">BN Name: {{ instance }}</h2>
+  <div class="full-with">
+    <form nz-form class="login-form-wrap" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-control [nzErrorTip]="userNameError">
+          <input nzSize="large" [placeholder]="'username'" type="text" nz-input formControlName="clientName" />
+          <ng-template #userNameError let-control>
+            <ng-container *ngIf="control.hasError('required')"
+              >Please input your User name</ng-container
+            >
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control [nzErrorTip]="passwordError">
+          <nz-input-group [nzSize]="'large'" >
+            <input autocomplete="on" [placeholder]="'password'" [type]="passwordVisible ? 'text' : 'password'" nz-input
+              formControlName="password" />
+          </nz-input-group>
+          <ng-template #passwordError let-control>
+            <ng-container *ngIf="control.hasError('required')"
+              >Please input your Password</ng-container
+            >
+            <ng-container *ngIf="control.hasError('regular')">
+              The password is a combination of 8-20 digits of numbers and
+              letters with at least one uppercase letter
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control [nzErrorTip]="passwordError1">
+          <nz-input-group [nzSize]="'large'" >
+            <input autocomplete="on" [placeholder]="'password'" [type]="passwordVisible ? 'text' : 'password'" nz-input
+              formControlName="confirmPassword" />
+          </nz-input-group>
+          <ng-template #passwordError1 let-control>
+            <ng-container *ngIf="control.hasError('required')"
+              >Please input your confirmPassword</ng-container
+            >
+            <ng-container *ngIf="control.hasError('regular')">
+              The two inputs do not match
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <div nz-row nzJustify="space-between">
+        <div nz-col>
+          <label nz-checkbox formControlName="isAgree">
+            <span>I have read and understand the following statement</span>
+          </label>
+        </div>
+        <div nz-col>
+          <!-- <a class="operate-text">注册</a> -->
+        </div>
+      </div>
+      <button nz-button nzSize="large" class="full-with m-t-15 btn" [nzType]="'primary'">Sign Up</button>
+    </form>
+  </div>
+</div>

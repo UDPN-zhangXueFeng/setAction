@@ -1,0 +1,225 @@
+<app-page-header [pageHeaderInfo]="pageHeaderInfo"></app-page-header>
+<ng-template #headerExtra>
+  <div>
+    <div>
+      <img src="../../../../assets/images/WEB.png" alt="" />
+      <img class="m-l-5" src="../../../../assets/images/API (1).png" alt="" />
+    </div>
+  </div>
+</ng-template>
+<div class="normal-table-wrap">
+  <nz-card
+    [nzBodyStyle]="{ 'padding-bottom': 0 }"
+    [nzTitle]="'Transaction Volume'"
+    class="m-b-10"
+  >
+    <form nz-form [formGroup]="validateForm" nzLayout="vertical" class="m-b-30">
+      <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24 }">
+        <div
+          nz-col
+          [nzXXl]="6"
+          [nzXl]="8"
+          [nzLg]="12"
+          [nzMd]="12"
+          [nzSm]="24"
+          [nzXs]="24"
+        >
+          <nz-form-item>
+            <nz-form-label>Currency Type</nz-form-label>
+            <nz-form-control>
+              <nz-cascader
+                [nzOptions]="nzOptions"
+                formControlName="currencyType"
+                [(ngModel)]="values"
+              ></nz-cascader>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div
+          nz-col
+          [nzXXl]="6"
+          [nzXl]="8"
+          [nzLg]="12"
+          [nzMd]="12"
+          [nzSm]="24"
+          [nzXs]="24"
+        >
+          <nz-form-item>
+            <nz-form-label>Transaction Type</nz-form-label>
+            <nz-form-control>
+              <nz-select formControlName="transType" nzPlaceHolder="All">
+                <nz-option nzValue="" nzLabel="All"></nz-option>
+                <nz-option nzValue="Transfer" nzLabel="Transfer"></nz-option>
+                <nz-option nzValue="Swap" nzLabel="Swap"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div
+          nz-col
+          [nzXXl]="6"
+          [nzXl]="8"
+          [nzLg]="12"
+          [nzMd]="12"
+          [nzSm]="24"
+          [nzXs]="24"
+        >
+          <nz-form-item>
+            <nz-form-label>Period</nz-form-label>
+            <nz-form-control>
+              <nz-select formControlName="transDateType" nzPlaceHolder="All">
+                <nz-option nzValue="1" nzLabel="Last 7 Days"></nz-option>
+                <nz-option nzValue="2" nzLabel="Last 30 Days"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div
+          nz-col
+          [nzXXl]="6"
+          [nzXl]="24"
+          [nzLg]="12"
+          [nzMd]="12"
+          [nzSm]="24"
+          [nzXs]="24"
+          class="text-right"
+        >
+          <nz-form-item>
+            <nz-form-label [nzNoColon]="true"></nz-form-label>
+            <nz-form-control>
+              <div nz-col [nzSpan]="24">
+                <button nz-button [nzType]="'primary'" (click)="onQuery()">
+                  Query
+                </button>
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+    <ngx-charts-line-chart
+      [view]="view"
+      [scheme]="colorScheme"
+      [legend]="legend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxis]="xAxis"
+      [yAxis]="yAxis"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [timeline]="timeline"
+      [results]="multi"
+    >
+    </ngx-charts-line-chart>
+  </nz-card>
+
+  <nz-card
+    [nzBodyStyle]="{ 'padding-bottom': 0 }"
+    [nzTitle]="'Transaction Value'"
+    class="m-b-10"
+  >
+    <form
+      nz-form
+      [formGroup]="validateForm1"
+      nzLayout="vertical"
+      class="m-b-30"
+    >
+      <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24 }">
+        <div
+          nz-col
+          [nzXXl]="6"
+          [nzXl]="8"
+          [nzLg]="12"
+          [nzMd]="12"
+          [nzSm]="24"
+          [nzXs]="24"
+        >
+          <nz-form-item>
+            <nz-form-label>Currency Type</nz-form-label>
+            <nz-form-control>
+              <nz-cascader
+                [nzOptions]="nzOption"
+                formControlName="currencyType"
+                [(ngModel)]="value"
+              ></nz-cascader>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div
+          nz-col
+          [nzXXl]="6"
+          [nzXl]="8"
+          [nzLg]="12"
+          [nzMd]="12"
+          [nzSm]="24"
+          [nzXs]="24"
+        >
+          <nz-form-item>
+            <nz-form-label>Transaction Type</nz-form-label>
+            <nz-form-control>
+              <nz-select formControlName="transType" nzPlaceHolder="All">
+                <nz-option nzValue="" nzLabel="All"></nz-option>
+                <nz-option nzValue="Transfer" nzLabel="Transfer"></nz-option>
+                <nz-option nzValue="Swap" nzLabel="Swap"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div
+          nz-col
+          [nzXXl]="6"
+          [nzXl]="8"
+          [nzLg]="12"
+          [nzMd]="12"
+          [nzSm]="24"
+          [nzXs]="24"
+        >
+          <nz-form-item>
+            <nz-form-label>Period</nz-form-label>
+            <nz-form-control>
+              <nz-select formControlName="transDateType" nzPlaceHolder="All">
+                <nz-option nzValue="1" nzLabel="Last 7 Days"></nz-option>
+                <nz-option nzValue="2" nzLabel="Last 30 Days"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div
+          nz-col
+          [nzXXl]="6"
+          [nzXl]="24"
+          [nzLg]="12"
+          [nzMd]="12"
+          [nzSm]="24"
+          [nzXs]="24"
+          class="text-right"
+        >
+          <nz-form-item>
+            <nz-form-label [nzNoColon]="true"></nz-form-label>
+            <nz-form-control>
+              <div nz-col [nzSpan]="24">
+                <button nz-button [nzType]="'primary'" (click)="onQuery1()">
+                  Query
+                </button>
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+    <ngx-charts-line-chart
+      [view]="view"
+      [scheme]="colorScheme"
+      [legend]="legend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxis]="xAxis"
+      [yAxis]="yAxis"
+      [xAxisLabel]="xAxisLabel1"
+      [yAxisLabel]="yAxisLabel1"
+      [timeline]="timeline"
+      [results]="multi1"
+    >
+    </ngx-charts-line-chart>
+  </nz-card>
+</div>

@@ -1,0 +1,244 @@
+<app-page-header
+  [backTpl]="backTpl"
+  [backUrl]="'/sand-box/sand-transaction/swap'"
+  [pageHeaderInfo]="pageHeaderInfo"
+></app-page-header>
+<ng-template #backTpl>
+  <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+</ng-template>
+<ng-template #headerExtra>
+  <div>
+    <div>
+      <img class="m-l-5" src="../../../../assets/images/API (1).png" alt="" />
+    </div>
+  </div>
+</ng-template>
+<div class="normal-table-wrap">
+  <!-- <div class="ctx-titles">
+    <nz-breadcrumb>
+      <nz-breadcrumb-item>Txn Management</nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        <a routerLink="/sandBox/transaction/swap">Swap</a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>Info</nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </div> -->
+  <div nz-row class="inner-content">
+    <div nz-col nzSpan="24" nzOffset="">
+      <ng-container *ngIf="!datailStatus">
+        <nz-card
+          nzTitle="Available Transaction Nodes"
+          [nzBordered]="false"
+          [nzExtra]=""
+        >
+          <div class="search-result-list">
+            <nz-table
+              #basicTable
+              [nzData]="listOfData"
+              [nzLoading]="isLoading"
+              [nzScroll]="{ x: '2400px' }"
+            >
+              <thead>
+                <tr>
+                  <th>Source TN Name</th>
+                  <th>Source Currency</th>
+                  <th>
+                    Amount<span class="text-gray-500">{{
+                      '(' + listOfData[0].fromSpliceCurrencyType + ')'
+                    }}</span>
+                  </th>
+                  <th>
+                    Estimated Channel Fee<span class="text-gray-500">{{
+                      this.channelType
+                    }}</span>
+                  </th>
+                  <!-- <th>Gas</th> -->
+                  <th>
+                    Service Fee<span class="text-gray-500">{{
+                      '(' + listOfData[0].fromSpliceCurrencyType + ')'
+                    }}</span>
+                  </th>
+                  <th>
+                    Total Amount<span class="text-gray-500">{{
+                      '(' + listOfData[0].fromSpliceCurrencyType + ')'
+                    }}</span
+                    ><span
+                      class="m-l-5"
+                      nz-tooltip
+                      [nzTooltipTitle]="tooltip"
+                      [nzTooltipPlacement]="'right'"
+                      [nzTooltipColor]="'#3c5686'"
+                      ><i
+                        nz-icon
+                        nzType="question-circle"
+                        [nzTheme]="'twotone'"
+                      ></i>
+                      <ng-template #tooltip>
+                        <div class="text-black">
+                          It is the sum of Amount, Estimated Channel Fee and
+                          Service Fee. The Estimated Channel Fee shall be added
+                          after exchange rate conversion.
+                        </div>
+                      </ng-template></span
+                    >
+                  </th>
+                  <th>Rate</th>
+                  <th>Target TN Name</th>
+                  <th>Target Currency</th>
+                  <th>IsKYC</th>
+                  <th [nzRight]="true">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of basicTable.data; index as i">
+                  <td>{{ data.nodeName }}</td>
+                  <td>{{ data.fromSpliceCurrencyType }}</td>
+                  <td>{{ data.transCurrentAmt }}</td>
+                  <td>
+                    {{
+                      listOfData[i].channelFee === 1
+                        ? data.estimatedChannelFee
+                        : '--'
+                    }}
+                  </td>
+                  <!-- <td>{{ '0' }}</td> -->
+                  <td>{{ data.serviceFee }}</td>
+                  <td>{{ data.totalAmount }}</td>
+                  <td>{{ data.fxRate }}</td>
+                  <td>{{ data.targetTnName }}</td>
+                  <td>{{ data.toSpliceCurrencyType }}</td>
+                  <td>{{ data.isKycRequest === 1 ? 'Yes' : 'No' }}</td>
+                  <td [nzRight]="true">
+                    <!-- <a>Action 一 {{ data.tnName }}</a>-->
+                    <a (click)="onSignture(data)">simulate signing(end-user)</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <!-- <a (click)="onInfo(data)">Sumbit</a>
+                    <nz-divider nzType="vertical"></nz-divider> -->
+                    <a (click)="onDetail(data)">Detail</a>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </nz-card>
+      </ng-container>
+      <ng-container *ngIf="datailStatus">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="12">
+            <nz-descriptions nzTitle="Sender Details" class="descriptions-info">
+              <nz-descriptions-item nzTitle="Business Account" [nzSpan]="3"
+                >{{ infoData.fromBankAccount }}
+              </nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Sender DID" [nzSpan]="3">{{
+                infoData.did
+              }}</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Source Currency type" [nzSpan]="3"
+                >{{ infoData.fromSpliceCurrencyType }}
+              </nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Sender Account" [nzSpan]="3"
+                >{{ infoData.fromAcc }}
+              </nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Amount" [nzSpan]="3"
+                >{{ infoData.transCurrentAmt }}
+                {{
+                  infoData.fromSpliceCurrencyType.split('-')[0]
+                }}</nz-descriptions-item
+              >
+            </nz-descriptions>
+          </div>
+          <div nz-col [nzSpan]="12">
+            <nz-descriptions
+              nzTitle="Beneficiary Details"
+              class="descriptions-info"
+            >
+              <nz-descriptions-item nzTitle="Beneficiary Type" [nzSpan]="3"
+                >{{
+                  infoData.beneficiaryType === 1
+                    ? 'Internal Bank Beneficiary'
+                    : 'External Beneficiary'
+                }}
+              </nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Target currency type" [nzSpan]="3"
+                >{{ infoData.toSpliceCurrencyType }}
+              </nz-descriptions-item>
+              <!-- <nz-descriptions-item nzTitle="Source Currency type" [nzSpan]="3">{{infoData.fromSpliceCurrencyType}}
+              </nz-descriptions-item> -->
+              <nz-descriptions-item nzTitle="Beneficiary's name" [nzSpan]="3"
+                >{{ infoData.beneficiaryName }}
+              </nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Business Account" [nzSpan]="3"
+                >{{ infoData.toBankAccount }}
+              </nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Beneficiary Account" [nzSpan]="3"
+                >{{ infoData.toAcc }}
+              </nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Amount received" [nzSpan]="3"
+                >{{ infoData.toAmount }}
+                {{
+                  infoData.toSpliceCurrencyType.split('-')[0]
+                }}</nz-descriptions-item
+              >
+            </nz-descriptions>
+          </div>
+        </div>
+        <nz-descriptions
+          [nzColumn]="2"
+          nzTitle="Other information"
+          class="descriptions-info"
+        >
+          <nz-descriptions-item nzTitle="TN Name">{{
+            infoData.nodeName
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="TN Code"
+            >{{ infoData.nodeNumber }}
+          </nz-descriptions-item>
+          <nz-descriptions-item
+            nzTitle="Estimated Channel Fee"
+            *ngIf="infoData.channelFee === 1"
+            >{{
+              infoData.estimatedChannelFee + infoData.channelCurrency
+            }}</nz-descriptions-item
+          >
+          <nz-descriptions-item
+            nzTitle="Max Channel Fee"
+            *ngIf="infoData.allowMaxChannelFee === 1"
+            >{{
+              infoData.maxChannelFee === null
+                ? '--'
+                : infoData.maxChannelFee + infoData.channelCurrency
+            }}</nz-descriptions-item
+          >
+          <nz-descriptions-item nzTitle="Target TN Name">{{
+            infoData.targetTnName
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Target TN Code"
+            >{{ infoData.targetTnCode }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Rate">{{
+            infoData.fxRate
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Gas">{{ '0' }} </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Service fee"
+            >{{ infoData.serviceFee }}
+            {{ infoData.fromSpliceCurrencyType.split('-')[0] }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Total Amount"
+            >{{ infoData.totalAmount }}
+            {{ infoData.fromSpliceCurrencyType.split('-')[0] }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="IsKYC"
+            >{{ infoData.isKycRequest === 1 ? 'Yes' : 'No' }}
+          </nz-descriptions-item>
+        </nz-descriptions>
+        <div class="back">
+          <button nz-button nzType="primary" (click)="onBack()">Back</button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<!-- <ng-template #extraTemplate>
+  <a class="dc-img">
+    <img src="../../../../assets/images/API (1).png" alt="" />
+  </a>
+</ng-template> -->

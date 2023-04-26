@@ -1,0 +1,41 @@
+<app-page-header [pageHeaderInfo]="pageHeaderInfo"></app-page-header>
+<ng-template #headerExtra>
+  <div>
+    <div> <img src="../../../../assets/images/API (1).png" alt=""></div>
+  </div>
+</ng-template>
+<ng-template #headerContent>
+  <span class="ctx-desc">
+    Since this utility will generate a private key, it is safer to do it locally. Please refer to below instruction:
+  </span>
+</ng-template>
+<div class="normal-table-wrap">
+  <nz-card>
+    <div style="font-weight: 500; font-size: 16px">
+      <p>
+        Step 1: Download jar file and use as below
+        <button class="m-l-5 m-r-5" nz-button [nzType]="'primary'" (click)="onSearch()">
+          Download
+        </button>
+        ( jar file MD5: 2b5ff9b20cbd9d9730f9ff78f9c0cc91 )
+      </p>
+      <p class="m-t-25">
+        Step 2: Use JDK 8+ to run below command so as to generate DID document
+        offline (you need to input location and dest file name during
+        generation):
+      </p>
+      <div class="m-t-25">
+        <p>
+          On linux/macOS:
+          <span class="m-l-5" style="color: #3c5686">java -jar "path-to-downloaded-jar-file"</span>
+        </p>
+      </div>
+      <div class="m-t-25">
+        <p>
+          On Windows:
+          <span class="m-l-5" style="color: #3c5686">java -jar path-to-downloaded-jar-file</span>
+        </p>
+      </div>
+    </div>
+  </nz-card>
+</div>
