@@ -41,7 +41,7 @@ jobs:
           user: ${{ secrets.USERNAME }} # 服务器用户名
           pass: ${{ secrets.PASSWORD }} # 服务器密码
           connect_timeout: 10s
-          local: './release.zip' # 源路径（工作流）
+          local: './dist/release.zip' # 源路径（工作流）
           remote: /rnail # 目标路径（服务器）
 
       # 在服务器端执行相关指令
