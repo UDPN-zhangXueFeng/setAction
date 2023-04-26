@@ -40,9 +40,10 @@ jobs:
           host: ${{ secrets.HOST }} # 服务器IP（需要在GitHub上自行配置对应的secret）
           user: ${{ secrets.USERNAME }} # 服务器用户名
           pass: ${{ secrets.PASSWORD }} # 服务器密码
+          port: ${{ secrets.PORT }}
           connect_timeout: 10s
           local: './dist/release.zip' # 源路径（工作流）
-          remote: /bsn # 目标路径（服务器）
+          remote: /bsn/nginx/sand-8082-4201 # 目标路径（服务器）
 
       # 在服务器端执行相关指令
       #- name: Executing remote ssh commands
